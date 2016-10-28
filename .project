@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>百度地图</name>
+	<name>Bmap</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -22,7 +22,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1474255364942</id>
+			<id>0</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
