@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+		#allmap {width: 100%; height:500px; overflow: hidden;}
+	    #result {width:100%;font-size:12px;}
+	    dl,dt,dd,ul,li{
+	        margin:0;
+	        padding:0;
+	        list-style:none;
+	    }
+	    p{font-size:12px;}
+	    dt{
+	        font-size:14px;
+	        font-family:"微软雅黑";
+	        font-weight:bold;
+	        border-bottom:1px dotted #000;
+	        padding:5px 0 5px 5px;
+	        margin:5px 0;
+	    }
+	    dd{
+	        padding:5px 0 0 5px;
+	    }
+	    li{
+	        line-height:28px;
+	    }
+	    .bds-top-banner{display:none!important;display:none}
+	    
+	    /* S 控件css reset */
+	    .BMap_scaleCtrl{
+	    	width:100px !important;
+	    	background:#fff;
+	    	padding:10px;
+	    	box-shadow: 4px 4px 10px #888888;
+	    	left:12px !important;
+	    	bottom:40px !important;
+	    }
+	    .BMap_scaleTxt{
+	    	margin-left:-10px;
+	    }
+	    .BMap_scaleHBar{
+	    	width:100px !important;	 
+	    	bottom:10px !important;   
+	    }
+	    .BMap_scaleLBar{
+	    	left:10px !important;
+	    	bottom:10px !important; 
+	    }
+	    .BMap_scaleRBar{
+	    	right:10px !important;
+	    	bottom:10px !important; 
+	    }
+	    .BMap_stdMpPan{
+	    	background:url(images/b_shift.png) no-repeat  !important;
+	    	width:31px !important;
+	    	height:31px !important;
+	    	box-shadow: 4px 4px 10px #888888;
+	    }
+	    .BMap_stdMpZoom{
+	    	width:45px !important;
+	    	height:88px !important;
+	    	
+	    }
+	    .BMap_stdMpZoom .BMap_button{
+	    	background:none !important;
+	    	width:31px !important;
+	    	height:31px !important;
+	    	left:0 !important;
+	    	box-shadow: 4px 4px 10px #888888;	    
+	    }
+	    .BMap_stdMpZoom .BMap_stdMpZoomIn{
+	    	background:url(images/b_plus.png) no-repeat  !important;
+	    }
+	    .BMap_stdMpZoom .BMap_stdMpZoomOut{
+	    	background:url(images/b_minus.png) no-repeat  !important;
+	    	top:43px!important;
+	    }
+	    .BMap_stdMpType1{
+	    	bottom:32px !important;
+	    	height:126px !important;
+	    }
+	    .BMap_stdMpPan .BMap_button{
+	    	width:4px !important;
+	    	height:4px !important;
+	    }
+	    .BMap_panN{
+	    	top:7px !important;
+	    }
+	    .BMap_panW{
+	    	left:7px !important;
+	    	top:13px !important;
+	    }
+	    .BMap_panE{
+	    	left:inherit !important;
+	    	right:7px !important;
+	    	top:13px !important;
+	    }
+	    .BMap_panS{
+	    	top:inherit !important;
+	    	bottom:7px !important;
+	    }
+	    .b-f-screen{
+	    	position:absolute;
+	    	top:15px;
+	    	right:15px;
+	    	width:31px;
+	    	height:31px;
+	    	
+	    	box-shadow: 4px 4px 10px #888888;
+	    	cursor:pointer;
+	    }
+	    .b-forward-full{
+	    	background:url(images/full_screen.png) no-repeat;
+	    }
+	    .b-back-full{
+	    	background:url(images/back_full.png) no-repeat;
+	    }
+
+	     /* E 控件css reset */
+
+         .BMapLabel{
+                max-width:inherit;
+                margin-bottom:0;
+                border-radius:4px;
+                padding:6px !important;
+            }
+            .BMapLabel:after {
+                content: '';
+                display: block;/*这个也很关键的*/
+                position: absolute;
+                width: 0px;
+                height: 0px;
+                bottom: -6px;
+                left:32px;
+                /*left: 50%;
+                margin-left:-6px;*/
+                border: 6px solid transparent;
+                border-top: 6px solid rgba(4, 4, 4,0.7);
+                border-bottom: none;
+                z-index: 1;
+            }
+	</style>
+	<script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=RG9sITlO9QH88Q5m8kzp9DMqeYOd9cGq"></script>
+	<!--加载鼠标绘制工具-->
+    <script type="text/javascript" src="js/1.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+    <!--加载检索信息窗口-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css" />
+    <title></title>
+	<script language="javascript" type="text/javascript" src="http://100.100.100.100/hidecss.js" charset="gb2312"></script>
+	<script type="text/javascript">hidecss('div#pb_adbanner,div#union-qbbanner,table.EC_mr15.EC_ppim_top.ec_pp_f,div.l_banner.banner_theme_2,div.wgt-ads,div.widget-ads,div#aside_ad[class^="aside_ad_"],div.wrap2 div.novel_wrap.j_novel_wrap,DIV#ecad,DIV.ecomad-banner-loading,DIV.ad.ecomad-banner-loading,div.EC_im_tg,.EC_tglj,div.wgt-union,div[id^="game_couplet_pb_"],div.search_union_mod.search_ecom_mod,div.banner_wrap,div.ws-tips,div.pause-ad,div.union_mod,DIV#content_left > TABLE[data-click],div#ec_im_container,DIV.banner_post.banner_post_bright.j_banner_post.clearfix,DIV.ad-block.ad-block-0,DIV[id^="html-reader-banner-"],DIV#container.container_s > DIV#content_left > TABLE,DIV#container.container_l > DIV#content_left > TABLE,DIV.r.ec_bdtg,DIV.fsblock:last-child,TABLE#relEcom,DIV#relecom54,DIV#ecomContainer,DIV#imgCmsAdPart,div.sam_iebrowser_banner,DIV[id^="m"][id$="_canvas"],a.adTopImg,div.res_top_banner');</script>
+</head>
+<body>
+	<div id="allmap" style="overflow:hidden;zoom:1;position:relative;"> 
+
+    </div>
+    <div id="result">
+        <input type="button" value="获取绘制的覆盖物个数" onclick="alert(overlays.length)"/>
+        <input type="button" value="清除所有覆盖物" onclick="clearAll()"/>
+    </div>
+    <div class="b-f-screen b-forward-full j-full-btn"></div>
+	<!--<div id="l-map"></div>
+	<div id="r-result">
+		<input type="button" onclick="showOver()" value="显示" />
+		<input type="button" onclick="hideOver()" value="隐藏" />
+	</div>-->
+</body>
+</html>
+<script>
+// S 地图
+$(function(){
+	var winhei=$(window).height();
+	var bothei=$("#result").height();
+	var inithei=$("#allmap").height();
+	$(".j-full-btn").on("click",function(){
+		if($(this).hasClass("b-forward-full")){
+			$("#allmap").css({height:winhei-bothei});
+			$(this).addClass("b-back-full").removeClass("b-forward-full");
+		}else{
+			$("#allmap").css({height:inithei});
+			$(this).removeClass("b-back-full").addClass("b-forward-full");
+			
+		}
+		
+	})
+})
+</script>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(116.423188,39.922969);
+	map.centerAndZoom(point, 15);
+	
+           
+//	var marker = new BMap.Marker(new BMap.Point(116.423188,39.922969));  // 创建标注
+//	map.addOverlay(marker);              // 将标注添加到地图中
+	
+	map.enableScrollWheelZoom();
+	
+	// S 增加的控件 
+	var bottom_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_LEFT});// 左上角，添加比例尺
+	var bottom_right_navigation = new BMap.NavigationControl({
+		anchor: BMAP_ANCHOR_BOTTOM_RIGHT, type: BMAP_NAVIGATION_CONTROL_SMALL}); //右上角，仅包含平移和缩放按钮
+	map.addControl(bottom_left_control);
+	map.addControl(bottom_right_navigation);
+	// E 增加的控件 
+	
+    var overlays = [];
+    var aa=[];
+    var overlaycomplete = function(e){
+    	//alert(e.point[].lng + "," + e.point.lat);
+    	
+        overlays.push(e.overlay);
+        //console.log(e.overlay);
+        //获取经纬度
+        //console.log(e.overlay.ro);
+        aa.push(e.overlay.ro);
+        
+        e.overlay.enableEditing();
+        console.log(aa);
+       
+    };
+    
+    var styleOptions = {
+        strokeColor:"red",    //边线颜色。
+        fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
+        strokeWeight: 3,       //边线的宽度，以像素为单位。
+        strokeOpacity: 0.8,    //边线透明度，取值范围0 - 1。
+        fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
+        strokeStyle: 'solid' //边线的样式，solid或dashed。
+    }
+    //实例化鼠标绘制工具
+    var drawingManager = new BMapLib.DrawingManager(map, {
+        isOpen: false, //是否开启绘制模式
+        enableDrawingTool: true, //是否显示工具栏
+        drawingToolOptions: {
+            anchor: BMAP_ANCHOR_TOP_LEFT, //位置
+            offset: new BMap.Size(5, 5), //偏离值
+            drawingModes : [
+	            BMAP_DRAWING_POLYGON //工具栏上可以选择出现的绘制模式
+         	]
+        },
+        circleOptions: styleOptions, //圆的样式
+        polylineOptions: styleOptions, //线的样式
+        polygonOptions: styleOptions, //多边形的样式
+        rectangleOptions: styleOptions, //矩形的样式
+        
+    });  
+
+     //添加鼠标绘制工具监听事件，用于获取绘制结果
+    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+    
+    function clearAll() {
+        for(var i = 0; i < overlays.length; i++){
+            map.removeOverlay(overlays[i]);
+        }
+      
+        
+        overlays.length = 0   
+    }
+    
+    //增加折线
+//	var polyline = new BMap.Polyline([
+//		new BMap.Point(116.399, 39.910),
+//		new BMap.Point(116.405, 39.920),
+//		new BMap.Point(116.425, 39.900)
+//	], {strokeColor:"blue", strokeWeight:6,fillColor:"red",  strokeOpacity:0.5});
+//	map.addOverlay(polyline);      
+
+	//增加多边形
+	var polygonPointsArray = [];
+	var arr=["116.423188","116.431021","116.414852"];
+	var arr2=["39.922969","39.914336","39.915166"];
+	
+	for(i=0;i<arr.length;i++){
+		//alert(arr[i])
+		var x = arr[i];
+		var y = arr2[i];
+		polygonPointsArray[i] = new BMap.Point(x,y);
+		
+	}
+	console.log(polygonPointsArray)
+
+	var polygon = new BMap.Polygon(polygonPointsArray, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});  //创建多边形
+
+            // 定位
+            var myIconPos = new BMap.Icon("images/b_pos.png", new BMap.Size(64,64));
+            var markerPos = new BMap.Marker(new BMap.Point(116.423188,39.919000),{icon:myIconPos});
+
+            //label
+            var opts = {
+                  position : polygonPointsArray[0],    // 指定文本标注所在的地理位置
+                  offset   : new BMap.Size(-30, 0)    //设置文本偏移量
+                }
+                var label = new BMap.Label("立水桥站", opts);  // 创建文本标注对象
+
+                label.setStyle({
+                     color : "#fff",
+                     border : "0",
+                     fontSize : "18px",
+                     fontFamily:"simhei",   
+                     backgroundColor:"rgba(4, 4, 4,0.7)",
+                 });
+                map.addOverlay(label);
+                map.addOverlay(markerPos);
+                
+	     map.addOverlay(polygon);
+//	polygon.enableEditing();
+	
+</script>

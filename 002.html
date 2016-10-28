@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+		#l-map{height:100%;width:78%;float:left;border-right:2px solid #bcbcbc;}
+		#r-result{height:100%;width:20%;float:left;}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=D2b4558ebed15e52558c6a766c35ee73"></script>
+	<title>添加多个标注点</title>
+</head>
+<body>
+	<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+		var points = [[
+			 new BMap.Point(116.256515,39.965242),
+			 new BMap.Point(116.282579,39.941893),
+			 new BMap.Point(116.256515,39.926882)
+			 ],[new BMap.Point(116.256515,39.98),
+			 new BMap.Point(116.282579,39.985),
+			 new BMap.Point(116.256515,39.995)
+			]];
+//		var points = [
+//	        new BMap.Point(116.403188,39.922969),
+//	        new BMap.Point(116.413188,39.922969),
+//	        new BMap.Point(116.443188,39.922969),
+//	        new BMap.Point(116.463188,39.922969),
+//	        new BMap.Point(116.483188,39.922969)
+//	    ];
+    		// 百度地图API功能
+			var map = new BMap.Map("allmap");
+			var point = new BMap.Point(116.256515,39.995242);
+			map.centerAndZoom(point, 12);
+			map.enableScrollWheelZoom();
+			// S 增加的控件 
+			var bottom_left_control = new BMap.ScaleControl({anchor: BMAP_ANCHOR_BOTTOM_LEFT});// 左下角，添加比例尺
+			var bottom_right_navigation = new BMap.NavigationControl({
+				anchor: BMAP_ANCHOR_BOTTOM_RIGHT, type: BMAP_NAVIGATION_CONTROL_ZOOM}); //左下角，仅包含缩放按钮
+			map.addControl(bottom_left_control);
+			map.addControl(bottom_right_navigation);
+			// E 增加的控件 
+			
+		   
+		    //单击获取点击的经纬度
+			map.addEventListener("click",function(e){
+				 for (var i = 0;i < points.length; i++) {
+				 	for (j = 0; j < points[i].length; j++){
+				 		//console.log("points ========" + points[i][j].lng + "===lat===" + points[i][j].lat)
+//				 		var marker2 = new BMap.Marker(points[i][j]); 
+//						map.addOverlay(marker2);
+				 		if(e.point.lng < points[i][j].lng  &&  e.point.lat < points[i][j].lat){
+				 			
+							if(points[i][j].lng < e.point.lng + 0.01 && points[i][j].lat < e.point.lat + 0.01){
+								console.log("points ========" + points[i][j].lng + "===lat===" + points[i][j].lat)
+								console.log("e ==========" + e.point.lng + "===lat===" + e.point.lat)
+								
+								var marker2 = new BMap.Marker(points[i][j]);
+								
+								map.addOverlay(marker2);	
+								alert(i);
+								
+								
+							}
+							
+						}
+				 	}
+				 	
+				 	
+					
+			    }
+				//alert(e.point.lng + "," + e.point.lat);
+			});
+			
+    	</script>

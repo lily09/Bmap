@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+	</style>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=D2b4558ebed15e52558c6a766c35ee73"></script>
+	<title>多个标注点沿折线的轨迹运动</title>
+</head>
+<body>
+	<div id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	map.centerAndZoom(new BMap.Point(116.404, 39.925), 15);
+	map.enableScrollWheelZoom();
+	var bounds = null;
+	var linesPoints = null;
+	var spoi=[
+		new BMap.Point(116.380967,39.913285),    // 起点1
+		new BMap.Point(116.380967,39.923285),    // 起点2
+		new BMap.Point(116.380967,39.933285)    // 起点3
+	]
+	var epoi=[
+		new BMap.Point(116.404374,39.914668),    // 终点1
+		new BMap.Point(116.414374,39.926668),    // 终点2
+		new BMap.Point(116.424874,39.937668)    // 终点3
+	]
+	var myIcon = new BMap.Icon("images/car1.png", new BMap.Size(128, 128), {imageOffset: new BMap.Size(30, 15),imageSize:new BMap.Size(64, 64)});
+	//加载点
+	var loadPoints = function (slat, slng, elat, elng){
+		var lineP = new Array();
+		while(slat < elat || slng < elng){
+			if(slat < elat){
+				slat = slat + 0.0001;
+			}
+			if(slng < elng){
+				slng = slng + 0.002;
+			}
+			lineP.push(new BMap.Point(slng, slat));
+			bounds.push(new BMap.Point(slng, slat));
+		}
+		linesPoints[linesPoints.length] = lineP;
+	}
+	// 绘制线路
+	var drawRount = function (){
+		for(var m = 0;m < linesPoints.length; m++){
+			var polyline = new BMap.Polyline(linesPoints[m], {strokeColor:"blue", strokeWeight:6, strokeOpacity:0.5} );   //创建折线
+			map.addOverlay(polyline);   //增加折线
+		}
+	}
+	//加载点 --》run  (点加载完成去调run)
+	function excute(){
+		bounds = new Array();
+		linesPoints = new Array();
+		var sp, ep;
+		//得到路线
+		for(i=0;i<spoi.length;i++){
+			//console.log(i+"   =====i");
+			sp =spoi[i];
+			ep = epoi[i];
+			loadPoints(sp.lat, sp.lng, ep.lat, ep.lng);
+		}
+		//等数据加载完成，运行
+		setTimeout(function(){
+			run();
+		},1000);
+	}
+	var step = 10000;//3分钟
+	excute();
+	//每三分钟加载一次点
+	setInterval("excute()", step);
+
+	function run(){
+		map.clearOverlays();    // 清空覆盖物 -- 可以注释掉
+		// 绘制线路
+		drawRount();
+		map.setViewport(bounds);
+		for(var m = 0;m < linesPoints.length; m++){
+			var pts = linesPoints[m];
+			var len = pts.length;
+			var carMk = new BMap.Marker(pts[0],{icon:myIcon});
+			map.addOverlay(carMk);
+			resetMkPoint(1,len,pts,carMk)
+		}
+		function resetMkPoint(i,len,pts,carMk){
+			carMk.setPosition(pts[i]);
+			if(i < len){
+				setTimeout(function(){
+					i++;
+					resetMkPoint(i,len,pts,carMk);
+				}, step/len);
+			}
+		}
+	}
+
+
+	
+</script>
